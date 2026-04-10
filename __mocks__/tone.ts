@@ -1,13 +1,10 @@
 import { vi } from 'vitest'
 
-const makeSynth = () => {
-  const synth: Record<string, unknown> = {
-    triggerAttackRelease: vi.fn(),
-    volume: { value: 0 },
-    frequency: { value: 440 },
-  }
-  synth.toDestination = () => synth
-  return synth
+function makeSynth(this: Record<string, unknown>) {
+  this.triggerAttackRelease = vi.fn()
+  this.volume = { value: 0 }
+  this.frequency = { value: 440 }
+  this.toDestination = () => this
 }
 
 export const Transport = {
