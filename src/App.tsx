@@ -1,6 +1,7 @@
 import { useStore } from './store/useStore'
 import { TopBar } from './components/TopBar'
 import { LaneRow } from './components/LaneRow'
+import { PresetModal } from './components/PresetModal'
 import { useSchedulerSync } from './hooks/useSchedulerSync'
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
           <LaneRow key={lane.id} lane={lane} />
         ))}
       </div>
+      <PresetModal />
     </div>
   )
 }

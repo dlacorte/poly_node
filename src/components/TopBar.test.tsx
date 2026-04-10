@@ -11,6 +11,7 @@ beforeEach(() => {
     isPlaying: false,
     randomMode: { active: false, amount: 0.3 },
     patternSnapshot: null,
+    presetModalOpen: false,
   })
 })
 
@@ -28,7 +29,7 @@ describe('TopBar', () => {
 
   it('shows RESET and RNDM buttons', () => {
     render(<TopBar />)
-    expect(screen.getByRole('button', { name: /reset/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'reset' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /rndm/i })).toBeInTheDocument()
   })
 
@@ -50,5 +51,16 @@ describe('TopBar', () => {
     render(<TopBar />)
     fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '140' } })
     expect(useStore.getState().bpm).toBe(140)
+  })
+
+  it('shows PRESETS button', () => {
+    render(<TopBar />)
+    expect(screen.getByRole('button', { name: /presets/i })).toBeInTheDocument()
+  })
+
+  it('opens preset modal when PRESETS is clicked', () => {
+    render(<TopBar />)
+    fireEvent.click(screen.getByRole('button', { name: /presets/i }))
+    expect(useStore.getState().presetModalOpen).toBe(true)
   })
 })

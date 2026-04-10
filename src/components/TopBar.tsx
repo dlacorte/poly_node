@@ -10,12 +10,22 @@ export function TopBar() {
   const setRandomAmount = useStore(s => s.setRandomAmount)
   const randomizePattern = useStore(s => s.randomizePattern)
   const resetPattern = useStore(s => s.resetPattern)
+  const openPresetModal = useStore(s => s.openPresetModal)
 
   return (
     <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-2.5">
-      <div className="text-[15px] font-bold tracking-[0.15em] select-none">
-        <span className="text-white">POLY</span>
-        <span style={{ color: '#ff6b2b' }}>NODE</span>
+      <div className="flex items-center gap-2">
+        <div className="text-[15px] font-bold tracking-[0.15em] select-none">
+          <span className="text-white">POLY</span>
+          <span style={{ color: '#ff6b2b' }}>NODE</span>
+        </div>
+        <button
+          aria-label="presets"
+          onClick={openPresetModal}
+          className="px-2.5 py-1 rounded bg-neutral-800 border border-neutral-700 text-neutral-400 text-[10px] tracking-wide hover:border-neutral-500 transition-colors"
+        >
+          PRESETS
+        </button>
       </div>
 
       <div className="flex items-center gap-2.5">
