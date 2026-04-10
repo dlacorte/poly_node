@@ -20,8 +20,8 @@ export function LaneControls({ laneId, stepCount, division, offset, volume, pitc
   const setPitch = useStore(s => s.setPitch)
 
   return (
-    <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-      <label className="flex flex-col gap-0.5">
+    <div className="flex items-center gap-5 border-t border-neutral-800 pt-2 mt-1">
+      <label className="flex flex-col gap-0.5 flex-1">
         <span className="text-[9px] text-neutral-500 tracking-widest uppercase">Steps</span>
         <input
           type="range" min={2} max={16} value={stepCount}
@@ -45,7 +45,7 @@ export function LaneControls({ laneId, stepCount, division, offset, volume, pitc
         </select>
       </label>
 
-      <label className="flex flex-col gap-0.5">
+      <label className="flex flex-col gap-0.5 flex-1">
         <span className="text-[9px] text-neutral-500 tracking-widest uppercase">Offset</span>
         <input
           type="range" min={0} max={stepCount - 1} value={offset}
@@ -55,7 +55,7 @@ export function LaneControls({ laneId, stepCount, division, offset, volume, pitc
         />
       </label>
 
-      <label className="flex flex-col gap-0.5">
+      <label className="flex flex-col gap-0.5 flex-1">
         <span className="text-[9px] text-neutral-500 tracking-widest uppercase">Vol</span>
         <input
           type="range" min={0} max={100} value={Math.round(volume * 100)}
@@ -65,8 +65,10 @@ export function LaneControls({ laneId, stepCount, division, offset, volume, pitc
         />
       </label>
 
-      <label className="flex flex-col gap-0.5">
-        <span className="text-[9px] text-neutral-500 tracking-widest uppercase">Pitch <span className="text-neutral-400">{pitch > 0 ? '+' + pitch : pitch.toString()}</span></span>
+      <label className="flex flex-col gap-0.5 flex-1">
+        <span className="text-[9px] text-neutral-500 tracking-widest uppercase">
+          Pitch <span className="text-neutral-400">{pitch > 0 ? '+' + pitch : pitch.toString()}</span>
+        </span>
         <input
           type="range" min={-12} max={12} step={1} value={pitch}
           onChange={e => setPitch(laneId, Number(e.target.value))}
