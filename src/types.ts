@@ -56,3 +56,32 @@ export type PolyStore = {
   randomizePattern: () => void
   resetPattern: () => void
 }
+
+export type PresetCategory =
+  | 'West Africa'
+  | 'Afro-Cuban'
+  | 'Brazil'
+  | 'India'
+  | 'Math / Ratios'
+  | 'Jazz'
+  | 'Funk / Soul'
+  | 'Techno / Electronic'
+
+export type PresetLane = {
+  laneId: string      // 'kick' | 'snare' | 'hihat-c' | 'hihat-o' | 'clap' | 'perc'
+  steps: Step[]
+  stepCount: number
+  division: Division
+  offset: number
+  volume: number      // 0.0–1.0
+  pitch: number       // semitones, -12 to +12
+}
+
+export type Preset = {
+  id: string
+  name: string
+  category: PresetCategory
+  description: string
+  bpm: number
+  lanes: PresetLane[]
+}
