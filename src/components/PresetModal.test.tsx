@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import { PresetModal } from './PresetModal'
 import { useStore } from '../store/useStore'
 import { DEFAULT_LANES } from '../store/defaults'
@@ -33,14 +33,14 @@ describe('PresetModal', () => {
     useStore.setState({ presetModalOpen: true })
     render(<PresetModal />)
     expect(screen.getByRole('button', { name: /^All$/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /West Africa/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Afro-Cuban/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Brazil/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /India/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Math/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Jazz/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Funk/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Techno/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /filter West Africa/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /filter Afro-Cuban/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /filter Brazil/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /filter India/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /filter Math/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /filter Jazz/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /filter Funk/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /filter Techno/i })).toBeInTheDocument()
   })
 
   it('close button calls closePresetModal', () => {
@@ -69,17 +69,21 @@ describe('PresetModal', () => {
     render(<PresetModal />)
     expect(screen.getByText('Son Clave (3+2)')).toBeInTheDocument()
     expect(screen.getByText('Kpanlogo')).toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: /Afro-Cuban/ }))
+    fireEvent.click(screen.getByRole('button', { name: /filter Afro-Cuban/i }))
     expect(screen.getByText('Son Clave (3+2)')).toBeInTheDocument()
     expect(screen.queryByText('Kpanlogo')).not.toBeInTheDocument()
   })
 
-  it('resets filter to All when modal reopens', () => {
+  it('resets filter to All when modal reopens', async () => {
     useStore.setState({ presetModalOpen: true })
     render(<PresetModal />)
-    fireEvent.click(screen.getByRole('button', { name: /Afro-Cuban/ }))
-    useStore.setState({ presetModalOpen: false })
-    useStore.setState({ presetModalOpen: true })
+    fireEvent.click(screen.getByRole('button', { name: /filter Afro-Cuban/i }))
+    await act(async () => {
+      useStore.setState({ presetModalOpen: false })
+    })
+    await act(async () => {
+      useStore.setState({ presetModalOpen: true })
+    })
     expect(screen.getByText('Kpanlogo')).toBeInTheDocument()
   })
 })

@@ -64,6 +64,7 @@ function PresetModalContent({ onClose }: { onClose: () => void }) {
           {ALL_CATEGORIES.map(cat => (
             <button
               key={cat}
+              aria-label={`filter ${cat}`}
               onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
               className="px-3 py-1 rounded text-[10px] tracking-wide border transition-colors"
               style={
