@@ -28,7 +28,7 @@ export function PresetCard({ preset }: Props) {
         </div>
         <p className="text-[9px] text-neutral-500 leading-relaxed mb-3">{preset.description}</p>
         <button
-          aria-label={`load ${preset.name}`}
+          aria-label={`load ${preset.name.toLowerCase()}`}
           onClick={() => loadPreset(preset.id)}
           className="w-full py-1.5 rounded text-[10px] font-bold tracking-wide text-black transition-opacity hover:opacity-80"
           style={{ background: color }}
