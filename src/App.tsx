@@ -10,11 +10,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white p-6">
-      <TopBar />
-      <div className="mt-6 flex flex-col gap-3">
-        {lanes.map((lane) => (
-          <LaneRow key={lane.id} lane={lane} />
-        ))}
+      <div className="max-w-[960px] mx-auto">
+        <TopBar />
+        <div className="mt-6 flex flex-col gap-3">
+          {lanes.map((lane) => (
+            <LaneRow key={lane.id} lane={lane} />
+          ))}
+        </div>
       </div>
       <PresetModal />
     </div>
