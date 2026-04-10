@@ -153,3 +153,97 @@ describe('setBpm', () => {
     expect(useStore.getState().bpm).toBe(140)
   })
 })
+
+// ---- togglePlay ----
+
+describe('togglePlay', () => {
+  it('sets isPlaying to true', () => {
+    useStore.getState().togglePlay()
+    expect(useStore.getState().isPlaying).toBe(true)
+  })
+
+  it('toggles back to false', () => {
+    useStore.getState().togglePlay()
+    useStore.getState().togglePlay()
+    expect(useStore.getState().isPlaying).toBe(false)
+  })
+})
+
+// ---- toggleRandomMode ----
+
+describe('toggleRandomMode', () => {
+  it('activates random mode', () => {
+    useStore.getState().toggleRandomMode()
+    expect(useStore.getState().randomMode.active).toBe(true)
+  })
+
+  it('preserves amount when toggling', () => {
+    useStore.getState().setRandomAmount(0.7)
+    useStore.getState().toggleRandomMode()
+    expect(useStore.getState().randomMode.amount).toBe(0.7)
+  })
+})
+
+// ---- setRandomAmount ----
+
+describe('setRandomAmount', () => {
+  it('updates amount', () => {
+    useStore.getState().setRandomAmount(0.8)
+    expect(useStore.getState().randomMode.amount).toBe(0.8)
+  })
+})
+
+// ---- randomizePattern ----
+
+describe('randomizePattern', () => {
+  it('saves a snapshot before randomizing', () => {
+    const before = useStore.getState().lanes
+    useStore.getState().randomizePattern()
+    expect(useStore.getState().patternSnapshot).toEqual(before)
+  })
+
+  it('does not overwrite snapshot if one already exists', () => {
+    useStore.getState().randomizePattern()
+    const snapshot = useStore.getState().patternSnapshot
+    useStore.getState().randomizePattern()
+    expect(useStore.getState().patternSnapshot).toEqual(snapshot)
+  })
+
+  it('generates steps with correct count per lane', () => {
+    useStore.getState().randomizePattern()
+    const { lanes } = useStore.getState()
+    lanes.forEach(lane => {
+      expect(lane.steps.length).toBe(lane.stepCount)
+    })
+  })
+
+  it('produces steps with probability 1.0', () => {
+    useStore.getState().randomizePattern()
+    useStore.getState().lanes.forEach(lane => {
+      lane.steps.forEach(step => expect(step.probability).toBe(1.0))
+    })
+  })
+})
+
+// ---- resetPattern ----
+
+describe('resetPattern', () => {
+  it('restores lanes from snapshot', () => {
+    const original = useStore.getState().lanes
+    useStore.getState().randomizePattern()
+    useStore.getState().resetPattern()
+    expect(useStore.getState().lanes).toEqual(original)
+  })
+
+  it('clears the snapshot after reset', () => {
+    useStore.getState().randomizePattern()
+    useStore.getState().resetPattern()
+    expect(useStore.getState().patternSnapshot).toBeNull()
+  })
+
+  it('does nothing when no snapshot exists', () => {
+    const before = useStore.getState().lanes
+    useStore.getState().resetPattern()
+    expect(useStore.getState().lanes).toEqual(before)
+  })
+})

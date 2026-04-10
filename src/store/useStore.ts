@@ -97,10 +97,37 @@ export const useStore = create<PolyStore>((set, get) => ({
 
   setBpm: (value) => set({ bpm: value }),
 
-  // Remaining actions — implemented in Task 5
-  togglePlay: () => { throw new Error('not implemented') },
-  toggleRandomMode: () => { throw new Error('not implemented') },
-  setRandomAmount: () => { throw new Error('not implemented') },
-  randomizePattern: () => { throw new Error('not implemented') },
-  resetPattern: () => { throw new Error('not implemented') },
+  togglePlay: () => set(state => ({ isPlaying: !state.isPlaying })),
+
+  toggleRandomMode: () =>
+    set(state => ({
+      randomMode: { ...state.randomMode, active: !state.randomMode.active },
+    })),
+
+  setRandomAmount: (value) =>
+    set(state => ({ randomMode: { ...state.randomMode, amount: value } })),
+
+  randomizePattern: () =>
+    set(state => {
+      const { lanes, randomMode, patternSnapshot } = state
+      const density = 0.3 + (1 - randomMode.amount) * 0.4
+      const newLanes = lanes.map(lane => ({
+        ...lane,
+        steps: Array.from({ length: lane.stepCount }, () => ({
+          active: Math.random() < density,
+          probability: 1.0,
+        })),
+      }))
+      return {
+        lanes: newLanes,
+        // Only save snapshot the first time (before the first randomize)
+        patternSnapshot: patternSnapshot ?? lanes,
+      }
+    }),
+
+  resetPattern: () =>
+    set(state => {
+      if (!state.patternSnapshot) return state
+      return { lanes: state.patternSnapshot, patternSnapshot: null }
+    }),
 }))
