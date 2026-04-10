@@ -12,6 +12,7 @@ function resetStore() {
     isPlaying: false,
     randomMode: { active: false, amount: 0.3 },
     patternSnapshot: null,
+    presetModalOpen: false,
   })
 }
 
@@ -245,5 +246,31 @@ describe('resetPattern', () => {
     const before = useStore.getState().lanes
     useStore.getState().resetPattern()
     expect(useStore.getState().lanes).toEqual(before)
+  })
+})
+
+// ---- presetModalOpen ----
+
+describe('openPresetModal / closePresetModal', () => {
+  it('openPresetModal sets presetModalOpen to true', () => {
+    useStore.getState().openPresetModal()
+    expect(useStore.getState().presetModalOpen).toBe(true)
+  })
+
+  it('closePresetModal sets presetModalOpen to false', () => {
+    useStore.setState({ presetModalOpen: true })
+    useStore.getState().closePresetModal()
+    expect(useStore.getState().presetModalOpen).toBe(false)
+  })
+})
+
+// ---- loadPreset ----
+
+describe('loadPreset', () => {
+  it('does nothing with an invalid preset id', () => {
+    const before = useStore.getState()
+    useStore.getState().loadPreset('nonexistent')
+    expect(useStore.getState().lanes).toEqual(before.lanes)
+    expect(useStore.getState().bpm).toBe(before.bpm)
   })
 })

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { Division, PolyStore } from '../types'
 import { DEFAULT_LANES, DEFAULT_BPM } from './defaults'
+import { PRESETS } from '../presets/presets'
 
 export const useStore = create<PolyStore>((set, get) => ({
   lanes: DEFAULT_LANES,
@@ -8,6 +9,7 @@ export const useStore = create<PolyStore>((set, get) => ({
   isPlaying: false,
   randomMode: { active: false, amount: 0.3 },
   patternSnapshot: null,
+  presetModalOpen: false,
 
   toggleStep: (laneId, stepIndex) =>
     set(state => ({
@@ -130,4 +132,24 @@ export const useStore = create<PolyStore>((set, get) => ({
       if (!state.patternSnapshot) return state
       return { lanes: state.patternSnapshot, patternSnapshot: null }
     }),
+
+  openPresetModal: () => set({ presetModalOpen: true }),
+
+  closePresetModal: () => set({ presetModalOpen: false }),
+
+  loadPreset: (id) => set(state => {
+    const preset = PRESETS.find(p => p.id === id)
+    if (!preset) return state
+    return {
+      bpm: preset.bpm,
+      isPlaying: false,
+      patternSnapshot: null,
+      presetModalOpen: false,
+      lanes: state.lanes.map(lane => {
+        const pl = preset.lanes.find(pl => pl.laneId === lane.id)
+        if (!pl) return lane
+        return { ...lane, ...pl, muted: false, solo: false }
+      }),
+    }
+  }),
 }))

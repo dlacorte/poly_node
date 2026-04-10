@@ -55,6 +55,10 @@ export type PolyStore = {
   setRandomAmount: (value: number) => void
   randomizePattern: () => void
   resetPattern: () => void
+  presetModalOpen: boolean
+  openPresetModal: () => void
+  closePresetModal: () => void
+  loadPreset: (id: string) => void
 }
 
 export type PresetCategory =
