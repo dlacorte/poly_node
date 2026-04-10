@@ -274,3 +274,56 @@ describe('loadPreset', () => {
     expect(useStore.getState().bpm).toBe(before.bpm)
   })
 })
+
+describe('loadPreset (integration)', () => {
+  it('replaces bpm with preset bpm', () => {
+    useStore.getState().loadPreset('son-clave')
+    expect(useStore.getState().bpm).toBe(120)
+  })
+
+  it('replaces kick lane stepCount and division', () => {
+    useStore.getState().loadPreset('son-clave')
+    const kick = useStore.getState().lanes.find(l => l.id === 'kick')!
+    expect(kick.stepCount).toBe(8)
+    expect(kick.division).toBe('8n')
+  })
+
+  it('stops playback when loading', () => {
+    useStore.setState({ isPlaying: true })
+    useStore.getState().loadPreset('son-clave')
+    expect(useStore.getState().isPlaying).toBe(false)
+  })
+
+  it('clears patternSnapshot when loading', () => {
+    useStore.getState().randomizePattern()
+    useStore.getState().loadPreset('son-clave')
+    expect(useStore.getState().patternSnapshot).toBeNull()
+  })
+
+  it('closes preset modal when loading', () => {
+    useStore.setState({ presetModalOpen: true })
+    useStore.getState().loadPreset('son-clave')
+    expect(useStore.getState().presetModalOpen).toBe(false)
+  })
+
+  it('resets muted and solo state on all lanes', () => {
+    useStore.setState({
+      lanes: useStore.getState().lanes.map(l => ({ ...l, muted: true, solo: true })),
+    })
+    useStore.getState().loadPreset('son-clave')
+    useStore.getState().lanes.forEach(l => {
+      expect(l.muted).toBe(false)
+      expect(l.solo).toBe(false)
+    })
+  })
+
+  it('preserves lane static properties (id, name, sampleKey, color)', () => {
+    const beforeKick = useStore.getState().lanes.find(l => l.id === 'kick')!
+    useStore.getState().loadPreset('son-clave')
+    const afterKick = useStore.getState().lanes.find(l => l.id === 'kick')!
+    expect(afterKick.id).toBe(beforeKick.id)
+    expect(afterKick.name).toBe(beforeKick.name)
+    expect(afterKick.sampleKey).toBe(beforeKick.sampleKey)
+    expect(afterKick.color).toBe(beforeKick.color)
+  })
+})
