@@ -8,14 +8,16 @@ type Props = {
   division: Division
   offset: number
   volume: number
+  pitch: number
   color: string
 }
 
-export function LaneControls({ laneId, stepCount, division, offset, volume, color }: Props) {
+export function LaneControls({ laneId, stepCount, division, offset, volume, pitch, color }: Props) {
   const setStepCount = useStore(s => s.setStepCount)
   const setDivision = useStore(s => s.setDivision)
   const setOffset = useStore(s => s.setOffset)
   const setVolume = useStore(s => s.setVolume)
+  const setPitch = useStore(s => s.setPitch)
 
   return (
     <div className="grid grid-cols-2 gap-x-2 gap-y-1">
@@ -60,6 +62,16 @@ export function LaneControls({ laneId, stepCount, division, offset, volume, colo
           onChange={e => setVolume(laneId, Number(e.target.value) / 100)}
           style={{ accentColor: color }}
           aria-label="vol"
+        />
+      </label>
+
+      <label className="flex flex-col gap-0.5">
+        <span className="text-[9px] text-neutral-500 tracking-widest uppercase">Pitch <span className="text-neutral-400">{pitch > 0 ? '+' + pitch : pitch.toString()}</span></span>
+        <input
+          type="range" min={-12} max={12} step={1} value={pitch}
+          onChange={e => setPitch(laneId, Number(e.target.value))}
+          style={{ accentColor: color }}
+          aria-label={`pitch for ${laneId}`}
         />
       </label>
     </div>

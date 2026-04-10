@@ -21,15 +21,17 @@ describe('LaneControls', () => {
     division: '4n' as const,
     offset: 0,
     volume: 0.8,
+    pitch: 0,
     color: '#ff6b2b',
   }
 
-  it('renders all four controls', () => {
+  it('renders all five controls', () => {
     render(<LaneControls {...defaultProps} />)
     expect(screen.getByLabelText(/steps/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/div/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/offset/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/vol/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/pitch for kick/i)).toBeInTheDocument()
   })
 
   it('calls setStepCount when steps slider changes', () => {
@@ -44,5 +46,12 @@ describe('LaneControls', () => {
     const select = screen.getByLabelText(/div/i)
     fireEvent.change(select, { target: { value: '8n' } })
     expect(useStore.getState().lanes.find(l => l.id === 'kick')!.division).toBe('8n')
+  })
+
+  it('calls setPitch when pitch slider changes', () => {
+    render(<LaneControls {...defaultProps} />)
+    const slider = screen.getByLabelText(/pitch for kick/i)
+    fireEvent.change(slider, { target: { value: '5' } })
+    expect(useStore.getState().lanes.find(l => l.id === 'kick')!.pitch).toBe(5)
   })
 })

@@ -10,7 +10,7 @@ type Voice =
   | Tone.NoiseSynth
   | Tone.MetalSynth
 
-type VoiceTrigger = (time: Tone.Unit.Time) => void
+type VoiceTrigger = (time: Tone.Unit.Time, pitch: number) => void
 
 let voices: Record<SampleKey, Voice> | null = null
 let triggers: Record<SampleKey, VoiceTrigger> | null = null
@@ -62,12 +62,24 @@ export function initPlayers(): void {
   voices = { kick, snare, clap, 'hihat-closed': hihatClosed, 'hihat-open': hihatOpen, perc }
 
   triggers = {
-    kick: (time) => (kick as Tone.MembraneSynth).triggerAttackRelease('C1', '8n', time),
+    kick: (time, pitch) => {
+      const freq = Tone.Frequency('C1').transpose(pitch).toFrequency()
+      ;(kick as Tone.MembraneSynth).triggerAttackRelease(freq, '8n', time)
+    },
     snare: (time) => (snare as Tone.NoiseSynth).triggerAttackRelease('8n', time),
     clap: (time) => (clap as Tone.NoiseSynth).triggerAttackRelease('8n', time),
-    'hihat-closed': (time) => (hihatClosed as Tone.MetalSynth).triggerAttackRelease('8n', time),
-    'hihat-open': (time) => (hihatOpen as Tone.MetalSynth).triggerAttackRelease('8n', time),
-    perc: (time) => (perc as Tone.MetalSynth).triggerAttackRelease('8n', time),
+    'hihat-closed': (time, pitch) => {
+      ;(hihatClosed as Tone.MetalSynth).frequency.value = Tone.Frequency(400).transpose(pitch).toFrequency()
+      ;(hihatClosed as Tone.MetalSynth).triggerAttackRelease('8n', time)
+    },
+    'hihat-open': (time, pitch) => {
+      ;(hihatOpen as Tone.MetalSynth).frequency.value = Tone.Frequency(400).transpose(pitch).toFrequency()
+      ;(hihatOpen as Tone.MetalSynth).triggerAttackRelease('8n', time)
+    },
+    perc: (time, pitch) => {
+      ;(perc as Tone.MetalSynth).frequency.value = Tone.Frequency(400).transpose(pitch).toFrequency()
+      ;(perc as Tone.MetalSynth).triggerAttackRelease('8n', time)
+    },
   }
 }
 
@@ -75,10 +87,10 @@ export function triggerPlayer(
   sampleKey: SampleKey,
   time: Tone.Unit.Time,
   volume: number,
-  _pitch: number   // pitch reserved for future sample playback rate control
+  pitch: number
 ): void {
   if (!voices || !triggers) return
   const voice = voices[sampleKey]
   voice.volume.value = Tone.gainToDb(Math.max(0.001, volume))
-  triggers[sampleKey](time)
+  triggers[sampleKey](time, pitch)
 }

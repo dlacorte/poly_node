@@ -58,6 +58,7 @@ export function LaneRow({ lane }: Props) {
         division={lane.division}
         offset={lane.offset}
         volume={lane.volume}
+        pitch={lane.pitch}
         color={lane.color}
       />
     </div>
