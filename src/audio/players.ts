@@ -66,18 +66,23 @@ export function initPlayers(): void {
       const freq = Tone.Frequency('C1').transpose(pitch).toFrequency()
       ;(kick as Tone.MembraneSynth).triggerAttackRelease(freq, '8n', time)
     },
+    // NoiseSynth — broadband noise has no fundamental frequency; pitch parameter is ignored
     snare: (time) => (snare as Tone.NoiseSynth).triggerAttackRelease('8n', time),
+    // NoiseSynth — broadband noise has no fundamental frequency; pitch parameter is ignored
     clap: (time) => (clap as Tone.NoiseSynth).triggerAttackRelease('8n', time),
     'hihat-closed': (time, pitch) => {
-      ;(hihatClosed as Tone.MetalSynth).frequency.value = Tone.Frequency(400).transpose(pitch).toFrequency()
+      const freq = Tone.Frequency(400).transpose(pitch).toFrequency()
+      ;(hihatClosed as Tone.MetalSynth).frequency.setValueAtTime(freq, time)
       ;(hihatClosed as Tone.MetalSynth).triggerAttackRelease('8n', time)
     },
     'hihat-open': (time, pitch) => {
-      ;(hihatOpen as Tone.MetalSynth).frequency.value = Tone.Frequency(400).transpose(pitch).toFrequency()
+      const freq = Tone.Frequency(400).transpose(pitch).toFrequency()
+      ;(hihatOpen as Tone.MetalSynth).frequency.setValueAtTime(freq, time)
       ;(hihatOpen as Tone.MetalSynth).triggerAttackRelease('8n', time)
     },
     perc: (time, pitch) => {
-      ;(perc as Tone.MetalSynth).frequency.value = Tone.Frequency(400).transpose(pitch).toFrequency()
+      const freq = Tone.Frequency(200).transpose(pitch).toFrequency()
+      ;(perc as Tone.MetalSynth).frequency.setValueAtTime(freq, time)
       ;(perc as Tone.MetalSynth).triggerAttackRelease('8n', time)
     },
   }

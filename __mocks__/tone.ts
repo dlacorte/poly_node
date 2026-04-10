@@ -3,7 +3,7 @@ import { vi } from 'vitest'
 function makeSynth(this: Record<string, unknown>) {
   this.triggerAttackRelease = vi.fn()
   this.volume = { value: 0 }
-  this.frequency = { value: 440 }
+  this.frequency = { value: 440, setValueAtTime: vi.fn() }
   this.toDestination = () => this
 }
 
